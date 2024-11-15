@@ -5,9 +5,35 @@ import img1 from "../assets/movie-night-by-pool-whole-family.jpg";
 import img2 from "../assets/relax-area-resort.jpg";
 import img3 from "../assets/silhouette-palm-tree-with-umbrella.jpg";
 import BookingWidget from "../components/MainPage/BookingWidget";
-import Features from "../components/MainPage/Features";
+import Cards from "../components/MainPage/Cards";
 import Testimonial from "../components/MainPage/Testimonial";
-
+import { FaBed, FaUtensils, FaSwimmingPool } from 'react-icons/fa';
+const featuresData = [
+  {
+    id: 1,
+    icon: <FaBed className="text-6xl text-white mb-4" />,
+    title: 'Comfortable Rooms',
+    description: 'Relax in our cozy and comfortable rooms.',
+    detailedDescription: 'Our rooms are designed to provide you with the utmost comfort, featuring plush bedding and modern amenities.',
+    bgColor: 'bg-purple-600',
+  },
+  {
+    id: 2,
+    icon: <FaUtensils className="text-6xl text-white mb-4" />,
+    title: 'Fine Dining',
+    description: 'Enjoy exquisite cuisine at our restaurants.',
+    detailedDescription: 'Experience gourmet dining with a variety of international cuisines prepared by top chefs.',
+    bgColor: 'bg-green-600',
+  },
+  {
+    id: 3,
+    icon: <FaSwimmingPool className="text-6xl text-white mb-4" />,
+    title: 'Pool & Spa',
+    description: 'Unwind and rejuvenate at our pool and spa facilities.',
+    detailedDescription: 'Rejuvenate your senses with our luxurious pool and spa treatments, designed for your relaxation.',
+    bgColor: 'bg-blue-600',
+  },
+];
 const Home = () => {
   const images = [
     { src: img1, alt: "Resort image 1", legend: "Movie Night by the Pool" },
@@ -46,7 +72,8 @@ const Home = () => {
       {/* Features Section */}
       <div className="bg-gray-50 py-16">
         <div className="container mx-auto px-4 text-center">
-          <Features />
+        <h2 className="text-4xl font-bold text-blue-900 mb-8">Our Features</h2>
+          <Cards  cardData={featuresData}/>
         </div>
       </div>
 
