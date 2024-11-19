@@ -65,11 +65,11 @@ const RoomPage = () => {
   };
 
   const handleAdultsChange = (e) => {
-    setAdults(Number(e.target.value)); // Convert the value to a number
+    setAdults(Math.max(1, Number(e.target.value))); // Ensure at least 1 adult
   };
 
   const handleChildrenChange = (e) => {
-    setChildren(Number(e.target.value)); // Convert the value to a number
+    setChildren(Math.max(0, Number(e.target.value))); // Ensure no negative children
   };
 
   // Filter rooms based on selected filters
