@@ -12,6 +12,7 @@ const DataTable = ({
   currentPage,
   nextPage,
   prevPage,
+  isUserTable, // Differentiates between user and room table
 }) => {
   const pageNumbers = [];
 
@@ -33,57 +34,98 @@ const DataTable = ({
             </tr>
           </thead>
           <tbody>
-            {data.map((room, index) => (
-              <tr key={room.id} className="hover:bg-gray-50">
-                <td className="px-4 py-2 border-b">
-                  {index + 1 + (currentPage - 1) * roomsPerPage}
-                </td>{" "}
-                {/* Correct Sr. No */}
-                <td className="px-4 py-2 border-b">{room.name}</td>
-                <td className="px-4 py-2 border-b">{room.area}</td>
-                <td className="px-4 py-2 border-b">
-                  Adults: {room.guests.adults}, Children: {room.guests.children}
-                </td>
-                <td className="px-4 py-2 border-b">₹{room.price}</td>
-                <td className="px-4 py-2 border-b">{room.quantity}</td>
-                <td className="px-4 py-2 border-b">
-                  <span
-                    className={`px-2 py-1 rounded ${
-                      room.status === "Active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {room.status}
-                  </span>
-                </td>
-                {/* Image Column */}
-                <td className="px-4 py-2 border-b">
-                  <img
-                    src={room.image || "/path/to/default/image.jpg"} // Default image if not uploaded
-                    alt={room.name}
-                    className="w-16 h-16 object-cover rounded-md"
-                  />
-                </td>
-                {/* Facilities Column */}
-                <td className="px-4 py-2 border-b">
-                  {room.facilities && room.facilities.join(", ")}{" "}
-                  {/* Display facilities as comma-separated list */}
-                </td>
+            {data.map((item, index) => (
+              <tr key={item.id} className="hover:bg-gray-50">
+                {isUserTable ? (
+                  <>
+                    {/* User-specific columns */}
+                    <td className="px-4 py-2 border-b">
+                      {index + 1 + (currentPage - 1) * roomsPerPage}
+                    </td> {/* Correct User ID */}
+                    <td className="px-4 py-2 border-b">{item.name}</td>
+                    <td className="px-4 py-2 border-b">{item.mobile}</td> {/* Corrected field */}
+                    <td className="px-4 py-2 border-b">{item.address}</td>
+                    <td className="px-4 py-2 border-b">{item.dob}</td>
+                    <td className="px-4 py-2 border-b">
+                      <span
+                        className={`px-2 py-1 rounded ${
+                          item.verified === "Yes"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {item.verified}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 border-b">
+                      <span
+                        className={`px-2 py-1 rounded ${
+                          item.status === "Active"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 border-b">{item.date}</td>
+                  </>
+                ) : (
+                  <>
+                    {/* Room-specific columns */}
+                    <td className="px-4 py-2 border-b">
+                      {index + 1 + (currentPage - 1) * roomsPerPage}
+                    </td>{" "}
+                    {/* Correct Sr. No */}
+                    <td className="px-4 py-2 border-b">{item.name}</td>
+                    <td className="px-4 py-2 border-b">{item.area}</td>
+                    <td className="px-4 py-2 border-b">
+                      {/* Check if room.guests exists, otherwise default to "0" */}
+                      Adults: {item.guests?.adults || 0}, Children:{" "}
+                      {item.guests?.children || 0}
+                    </td>
+                    <td className="px-4 py-2 border-b">₹{item.price}</td>
+                    <td className="px-4 py-2 border-b">{item.quantity}</td>
+                    <td className="px-4 py-2 border-b">
+                      <span
+                        className={`px-2 py-1 rounded ${
+                          item.status === "Active"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
+                    </td>
+                    {/* Image Column */}
+                    <td className="px-4 py-2 border-b">
+                      <img
+                        src={item.image || "/path/to/default/image.jpg"} // Default image if not uploaded
+                        alt={item.name}
+                        className="w-16 h-16 object-cover rounded-md"
+                      />
+                    </td>
+                    {/* Facilities Column */}
+                    <td className="px-4 py-2 border-b">
+                      {item.facilities && item.facilities.join(", ")}{" "}
+                      {/* Display facilities as comma-separated list */}
+                    </td>
+                  </>
+                )}
                 <td className="px-4 py-2 border-b">
                   <div className="flex space-x-2">
                     <button
-                      onClick={() => handleEdit(room)}
+                      onClick={() => handleEdit(item)}
                       className="px-3 py-2 bg-yellow-500 text-white rounded shadow hover:bg-yellow-600"
-                      title="Edit Room"
+                      title={isUserTable ? "Edit User" : "Edit Room"}
                     >
                       <FaEdit />
                     </button>
 
                     <button
-                      onClick={() => handleDelete(room.id)}
+                      onClick={() => handleDelete(item.id)}
                       className="px-3 py-2 bg-red-500 text-white rounded shadow hover:bg-red-600"
-                      title="Delete Room"
+                      title={isUserTable ? "Delete User" : "Delete Room"}
                     >
                       <FaTrash />
                     </button>

@@ -7,7 +7,6 @@ import img1 from "../../assets/standard1.jpg";
 
 const ManageRooms = () => {
   const [rooms, setRooms] = useState([
-    // Room data
     {
       id: 1,
       name: "Simple Room",
@@ -20,29 +19,29 @@ const ManageRooms = () => {
       facilities: ["Wi-Fi", "Air Conditioning", "TV"],
     },
     {
-      id: 1,
-      name: "Simple Room",
-      area: "250 sq. ft.",
-      guests: { adults: 5, children: 3 },
-      price: 300,
-      quantity: 10,
+      id: 2,
+      name: "Deluxe Room",
+      area: "500 sq. ft.",
+      guests: { adults: 2, children: 2 },
+      price: 500,
+      quantity: 5,
       status: "Active",
       image: img1,
-      facilities: ["Wi-Fi", "Air Conditioning", "TV"],
+      facilities: ["Wi-Fi", "TV"],
     },
     {
-      id: 1,
-      name: "Simple Room",
-      area: "250 sq. ft.",
-      guests: { adults: 5, children: 3 },
-      price: 300,
-      quantity: 10,
-      status: "Active",
+      id: 3,
+      name: "Suite Room",
+      area: "1000 sq. ft.",
+      guests: { adults: 4, children: 0 },
+      price: 1000,
+      quantity: 3,
+      status: "Inactive",
       image: img1,
-      facilities: ["Wi-Fi", "Air Conditioning", "TV"],
+      facilities: ["Wi-Fi"],
     },
     {
-      id: 1,
+      id: 4,
       name: "Simple Room",
       area: "250 sq. ft.",
       guests: { adults: 5, children: 3 },
@@ -52,30 +51,29 @@ const ManageRooms = () => {
       image: img1,
       facilities: ["Wi-Fi", "Air Conditioning", "TV"],
     },
-    // Add more room data here...
   ]);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editRoomData, setEditRoomData] = useState(null);
 
-  // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const roomsPerPage = 3;
 
   const handleAddRoom = (roomData) => {
     setRooms([...rooms, { ...roomData, id: rooms.length + 1 }]);
+    setIsAddModalOpen(false);
   };
 
   const handleEditRoom = (updatedRoom) => {
     setRooms(
       rooms.map((room) => (room.id === updatedRoom.id ? updatedRoom : room))
     );
-    setIsEditModalOpen(false); // Close modal after editing
+    setIsEditModalOpen(false);
   };
 
   const handleOpenEditModal = (room) => {
-    setEditRoomData(room); // Pass room data to modal
+    setEditRoomData(room);
     setIsEditModalOpen(true);
   };
 
@@ -139,7 +137,10 @@ const ManageRooms = () => {
           "Facilities",
           "Actions",
         ]}
-        data={currentRooms}
+        data={currentRooms.map((room, index) => ({
+          ...room,
+          srNo: indexOfFirstRoom + index + 1,
+        }))}
         handleEdit={handleOpenEditModal}
         handleDelete={handleDeleteRoom}
         handleUploadImage={handleUploadImage}
@@ -149,46 +150,6 @@ const ManageRooms = () => {
         currentPage={currentPage}
         nextPage={nextPage}
         prevPage={prevPage}
-        renderRow={(room, index) => (
-          <tr key={room.id}>
-            {/* Correctly calculating Sr. No. */}
-            <td>{index + 1 + (currentPage - 1) * roomsPerPage}</td>
-            <td>{room.name}</td>
-            <td>{room.area}</td>
-            <td>{`${room.guests.adults} Adults, ${room.guests.children} Children`}</td>
-            <td>{room.price}</td>
-            <td>{room.quantity}</td>
-            <td>{room.status}</td>
-            <td>
-              <img
-                src={room.image}
-                alt={room.name}
-                className="w-12 h-12 rounded"
-              />
-            </td>
-            <td>{room.facilities.join(", ")}</td>
-            <td>
-              <button
-                onClick={() => handleOpenEditModal(room)}
-                className="text-blue-500 hover:text-blue-700"
-              >
-                <FaEdit />
-              </button>
-              <button
-                onClick={() => handleDeleteRoom(room.id)}
-                className="text-red-500 hover:text-red-700 ml-2"
-              >
-                <FaTrash />
-              </button>
-              <button
-                onClick={() => handleUploadImage(room.id)}
-                className="text-green-500 hover:text-green-700 ml-2"
-              >
-                <FaUpload />
-              </button>
-            </td>
-          </tr>
-        )}
       />
     </div>
   );
