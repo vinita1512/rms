@@ -14,6 +14,7 @@ import ManageBookings from "../pages/Admin/ManageBookings";
 import ManageReviews from "../pages/Admin/ManageReviews";
 import AdminLayout from "../components/Layout/AdminLayout";
 import UserLayout from "../components/Layout/UserLayout";
+import BookingPage from "../pages/BookingPage";
 
 const AppRouter = () => {
   return (
@@ -30,6 +31,7 @@ const AppRouter = () => {
         <Route path="/contactus" element={<ContactUs />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/roompage" element={<RoomPage />} />
+        <Route path="/booking/:roomId" element={<BookingPage />} />
       </Route>
       
       {/* Admin Routes */}
