@@ -37,7 +37,7 @@ const RoomCard = ({ room }) => {
         </div>
 
         <div className="mt-3 flex justify-between items-center">
-          <span className="text-xl font-bold text-green-600">${room.price} / night</span>
+          <span className="text-xl font-bold text-green-600">Rs. {room.price} / night</span>
           <button
             onClick={handleBookNow}
             className="bg-purple-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-purple-700 hover:shadow-lg transition-all duration-200 transform hover:scale-105"

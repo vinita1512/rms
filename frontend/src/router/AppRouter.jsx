@@ -15,13 +15,14 @@ import ManageReviews from "../pages/Admin/ManageReviews";
 import AdminLayout from "../components/Layout/AdminLayout";
 import UserLayout from "../components/Layout/UserLayout";
 import BookingPage from "../pages/BookingPage";
+import PaymentPage from "../pages/PaymentPage"; // Import the PaymentPage
 
 const AppRouter = () => {
   return (
     <Routes>
       {/* Redirect Root Path to Home */}
       <Route path="/" element={<Navigate to="/home" />} />
-      
+
       {/* User Routes */}
       <Route element={<UserLayout />}>
         <Route path="/home" element={<Home />} />
@@ -32,8 +33,10 @@ const AppRouter = () => {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/roompage" element={<RoomPage />} />
         <Route path="/booking/:roomId" element={<BookingPage />} />
+        <Route path="/payment/:roomId" element={<PaymentPage />} />
+        {/* Add PaymentPage Route */}
       </Route>
-      
+
       {/* Admin Routes */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route path="dashboard" element={<AdminDashboard />} />

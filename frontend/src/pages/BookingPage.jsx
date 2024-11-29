@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // Added useParams import
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import react-toastify styles
 
@@ -25,10 +25,10 @@ const roomData = [
 ];
 
 const BookingPage = () => {
-  const { roomId } = useParams();
-  const navigate = useNavigate();
+  const { roomId } = useParams(); // Get room ID from URL params
+  const navigate = useNavigate(); // To navigate to other pages
 
-  const [room, setRoom] = useState(null);
+  const [room, setRoom] = useState(null); // Store selected room
   const [bookingDetails, setBookingDetails] = useState({
     name: "",
     mobile: "",
@@ -37,17 +37,19 @@ const BookingPage = () => {
     checkOutDate: "",
   });
 
-  const [isRoomAvailable, setIsRoomAvailable] = useState(true);
+  const [isRoomAvailable, setIsRoomAvailable] = useState(true); // Room availability flag
 
   useEffect(() => {
+    // Find the room based on roomId in the URL params
     const foundRoom = roomData.find((r) => r.id === parseInt(roomId));
     if (foundRoom) {
       setRoom(foundRoom);
     } else {
-      navigate("/home");
+      navigate("/home"); // Navigate to home if room is not found
     }
   }, [roomId, navigate]);
 
+  // Handle input changes for booking details
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setBookingDetails((prev) => ({
@@ -56,21 +58,51 @@ const BookingPage = () => {
     }));
   };
 
+  // Check if the room is available for the selected dates
   const checkRoomAvailability = () => {
-    const isAvailable = Math.random() > 0.5; // Random availability logic for demo
+    // Example logic for availability: let's assume availability is random (50% chance)
+    const isAvailable = Math.random() > 0.5;
     setIsRoomAvailable(isAvailable);
   };
 
+  // Validate check-in and check-out dates
+  const validateDates = () => {
+    const { checkInDate, checkOutDate } = bookingDetails;
+    const checkIn = new Date(checkInDate);
+    const checkOut = new Date(checkOutDate);
+
+    if (!checkInDate || !checkOutDate) {
+      toast.error("Both check-in and check-out dates are required.");
+      return false;
+    }
+
+    if (checkOut <= checkIn) {
+      toast.error("Check-out date must be after check-in date.");
+      return false;
+    }
+
+    return true;
+  };
+
+  // Handle form submission (booking)
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isRoomAvailable) {
+    if (validateDates() && isRoomAvailable) {
       toast.success("Booking confirmed! Redirecting to payment...");
       setTimeout(() => {
-        // Redirect to the payment page after showing the toast
-        navigate(`/payment/${roomId}`);
-      }, 2000); // Delay to let the toast message show
-    } else {
-      toast.error("Sorry, the room is already booked for the selected dates.");
+        // Pass room details along with price when navigating to the payment page
+        navigate(`/payment/${roomId}`, {
+          state: {
+            roomPrice: room.price,
+            roomName: room.name, // Pass room name
+            checkInDate: bookingDetails.checkInDate, // Pass check-in date
+            checkOutDate: bookingDetails.checkOutDate, // Pass check-out date
+          },
+        });
+      }, 2000); // Delay to let the success toast show
+    } else if (!isRoomAvailable) {
+      toast.error("Sorry, the room is not available for the selected dates.");
     }
   };
 
@@ -96,10 +128,15 @@ const BookingPage = () => {
             </div>
 
             <div className="bg-white p-4 rounded-lg shadow-md">
-              <h2 className="text-2xl font-semibold text-indigo-800">{room.name}</h2>
+              <h2 className="text-2xl font-semibold text-indigo-800">
+                {room.name}
+              </h2>
               <div className="flex items-center space-x-3 mt-3">
                 <p className="text-lg text-gray-600">
-                  <span className="font-bold text-green-600">${room.price}</span> per night
+                  <span className="font-bold text-green-600">
+                    Rs. {room.price}
+                  </span>{" "}
+                  per night
                 </p>
                 <span className="px-4 py-1 bg-indigo-600 text-white text-sm rounded-full">
                   Best Value
@@ -131,11 +168,16 @@ const BookingPage = () => {
           </div>
 
           <div className="bg-white rounded-xl shadow-md p-6 mt-6 lg:mt-0">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Enter Your Booking Details</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Enter Your Booking Details
+            </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-600" htmlFor="name">
+                <label
+                  className="block text-sm font-medium text-gray-600"
+                  htmlFor="name"
+                >
                   Full Name
                 </label>
                 <input
@@ -150,7 +192,10 @@ const BookingPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-600" htmlFor="mobile">
+                <label
+                  className="block text-sm font-medium text-gray-600"
+                  htmlFor="mobile"
+                >
                   Mobile Number
                 </label>
                 <input
@@ -165,7 +210,10 @@ const BookingPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-600" htmlFor="address">
+                <label
+                  className="block text-sm font-medium text-gray-600"
+                  htmlFor="address"
+                >
                   Address
                 </label>
                 <textarea
@@ -181,7 +229,10 @@ const BookingPage = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-600" htmlFor="checkInDate">
+                  <label
+                    className="block text-sm font-medium text-gray-600"
+                    htmlFor="checkInDate"
+                  >
                     Check-In Date
                   </label>
                   <input
@@ -199,7 +250,10 @@ const BookingPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-600" htmlFor="checkOutDate">
+                  <label
+                    className="block text-sm font-medium text-gray-600"
+                    htmlFor="checkOutDate"
+                  >
                     Check-Out Date
                   </label>
                   <input
@@ -207,30 +261,21 @@ const BookingPage = () => {
                     id="checkOutDate"
                     name="checkOutDate"
                     value={bookingDetails.checkOutDate}
-                    onChange={(e) => {
-                      handleInputChange(e);
-                      checkRoomAvailability();
-                    }}
+                    onChange={handleInputChange}
                     required
                     className="w-full p-3 mt-2 bg-gray-100 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
 
-              {bookingDetails.checkInDate && bookingDetails.checkOutDate && (
-                <p className={isRoomAvailable ? "text-green-600" : "text-red-600"}>
-                  {isRoomAvailable
-                    ? "The room is available for your selected dates."
-                    : "The room is not available for your selected dates."}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition"
-              >
-                Confirm Booking
-              </button>
+              <div className="mt-4">
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-indigo-600 text-white rounded-xl text-lg hover:bg-indigo-700"
+                >
+                  {isRoomAvailable ? "Book Now" : "Room Unavailable"}
+                </button>
+              </div>
             </form>
           </div>
         </div>
